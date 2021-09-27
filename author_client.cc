@@ -42,7 +42,7 @@ class AuthorClient {
 
   // Assembles the client's payload, sends it and presents the response back
   // from the server.
-  std::string GetAuthor(const int id) {
+  std::tuple<int,std::string,std::string,std::string,std::string> GetAuthor(const int id) {
     // Data we are sending to the server.
     AuthorRequest request;
     request.set_id(id);
@@ -59,11 +59,11 @@ class AuthorClient {
 
     // Act upon its status.
     if (status.ok()) {
-      return reply.first_name();
+      return std::tuple<int,std::string,std::string,std::string,std::string>(reply.id(),reply.first_name(),reply.last_name(),reply.email(),reply.title());     
     } else {
       std::cout << status.error_code() << ": " << status.error_message()
                 << std::endl;
-      return "RPC failed";
+      throw "RPC failed";
     }
   }
 
@@ -75,8 +75,13 @@ int main(int argc, char** argv) {
   
   AuthorClient greeter(
       grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
-  auto reply = greeter.GetAuthor(1);
-  std::cout << "Greeter received: " << reply << std::endl;
+  std::tuple<int,std::string,std::string,std::string,std::string> reply = greeter.GetAuthor(1);
+  std::cout << "id: " << std::get<0>(reply) << std::endl;
+  std::cout << "first_name: " << std::get<1>(reply) << std::endl;
+  std::cout << "last_name: " << std::get<2>(reply) << std::endl;
+  std::cout << "email: " << std::get<3>(reply) << std::endl;
+  std::cout << "title: " << std::get<4>(reply) << std::endl;
+
 
   return 0;
 }
