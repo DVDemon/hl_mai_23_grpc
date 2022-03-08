@@ -26,7 +26,8 @@ using author::AuthorRequest;
 class AuthorServiceImpl final : public Author::Service {
   Status GetAuthor(ServerContext* context, const AuthorRequest* request,
                   AuthorReply* reply) override {
-    std::string prefix("Hello ");
+  
+    std::cout << "request id:" << request->id() << std::endl;
     reply->set_first_name("Ivan");
     reply->set_last_name("Ivanov");
     reply->set_email("ivanov@yandex.ru");

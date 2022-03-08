@@ -75,7 +75,13 @@ int main(int argc, char** argv) {
   
   AuthorClient greeter(
       grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
-  std::tuple<int,std::string,std::string,std::string,std::string> reply = greeter.GetAuthor(1);
+  
+  int id{1};
+
+  if(argc>1) {
+    id = atoi(argv[1]);
+  }
+  std::tuple<int,std::string,std::string,std::string,std::string> reply = greeter.GetAuthor(id);
   std::cout << "id: " << std::get<0>(reply) << std::endl;
   std::cout << "first_name: " << std::get<1>(reply) << std::endl;
   std::cout << "last_name: " << std::get<2>(reply) << std::endl;
